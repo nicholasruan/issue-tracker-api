@@ -22,7 +22,26 @@ const loginValidation = (data) => {
 	return schema.validate(data);
 };
 
+const projectValidation = (data) => {
+	const schema = Joi.object({
+		title: Joi.string().required(),
+	});
+
+	return schema.validate(data);
+}
+
+// MongoDB id validation
+const idValidation = (data) => {
+	const schema = Joi.object({
+		id: Joi.string().min(24).max(24).required()
+	});
+
+	return schema.validate(data);
+}
+
 module.exports = {
 	registerValidation: registerValidation,
-	loginValidation: loginValidation
+	loginValidation: loginValidation,
+	projectValidation: projectValidation,
+	idValidation: idValidation
 };
