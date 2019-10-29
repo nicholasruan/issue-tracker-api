@@ -43,13 +43,26 @@ router.put('/:id/edit', verify, async (req,res) => {
 			$set: req.body,
 		});
 
-		res.send(updateProject);
+		if (updateProject.n == 0) return res.status(400).send('Project not found');
+
+		res.status(200).send("Project Updated");
 	} catch(error) {
 		res.status(400).send(error);
 	}
 });
 
-
 // - Delete "/api/projects/:id/delete"
+router.delete('/:id/delete', verify, async (req, res) => {
+	const {error} = idValidation(req.params);
+	if (error) return res.status(400).send(error.details[0].message);
+
+	try {
+		const deleteProject = await Project.deleteOne({ _id: req.params.id });
+		if (deleteProject.n == 0) return res.status(400).send('Project not found');
+		res.status(200).send("Project deleted");
+	} catch(error) {
+		res.status(400).send(error);
+	}
+});
 
 module.exports = router;
