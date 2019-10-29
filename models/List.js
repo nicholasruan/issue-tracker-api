@@ -5,7 +5,11 @@ const ListSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	card_ids: [String],
+	project_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true
+	},
+	card_ids: [mongoose.Schema.Types.ObjectId],
 	date: {
 		type: Date,
 		default: Date.now

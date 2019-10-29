@@ -39,9 +39,30 @@ const idValidation = (data) => {
 	return schema.validate(data);
 }
 
+const listValidation = (data) => {
+	const schema = Joi.object({
+		title: Joi.string().required(),
+		project_id: Joi.string().min(24).max(24).required()
+	});
+
+	return schema.validate(data);
+}
+
+const cardValidation = (data) => {
+	const schema = Joi.object({
+		name: Joi.string().required(),
+		created_by: Joi.string().required(),
+		list_id: Joi.string().min(24).max(24).required()
+	});
+
+	return schema.validate(data);
+}
+
 module.exports = {
 	registerValidation: registerValidation,
 	loginValidation: loginValidation,
 	projectValidation: projectValidation,
-	idValidation: idValidation
+	idValidation: idValidation,
+	listValidation: listValidation,
+	cardValidation: cardValidation
 };

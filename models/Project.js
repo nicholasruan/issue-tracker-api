@@ -5,8 +5,8 @@ const ProjectSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	members: [String],
-	list_ids: [String],
+	members: [mongoose.Schema.Types.ObjectId],
+	list_ids: [mongoose.Schema.Types.ObjectId],
 	date: {
 		type: Date,
 		default: Date.now

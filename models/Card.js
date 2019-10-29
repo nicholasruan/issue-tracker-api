@@ -15,6 +15,10 @@ const CardSchema = new mongoose.Schema({
 	description: {
 		type: String
 	},
+	list_id : {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true
+	},
 	assigned: [String],
 	tags: [String],
 	due_date: {

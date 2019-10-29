@@ -5,6 +5,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const authRoute = require('./routes/auth');
 const projRoute = require('./routes/project');
+const listRoute = require('./routes/list');
+const cardRoute = require('./routes/card');
 const port = process.env.PORT || 5000;
 
 // Middleware
@@ -21,6 +23,8 @@ connection.once('open', () => {
 // Routes
 app.use('/api/users', authRoute);
 app.use('/api/projects', projRoute);
+app.use('/api/lists', listRoute);
+app.use('/api/cards', cardRoute);
 // app.use('/api/posts', postRoute);
 
 app.listen(port, () => {
