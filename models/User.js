@@ -23,7 +23,8 @@ const UserSchema = new mongoose.Schema({
 	date: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	project_ids: [String]
 });
 
 module.exports = mongoose.model('User', UserSchema);
