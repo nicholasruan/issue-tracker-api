@@ -30,4 +30,47 @@ router.post('/create', verify, async (req, res) => {
   }
 });
 
+router.get('/:id', verify, async (req, res) => {
+  const {error} = idValidation(req.params);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  try {
+    const foundCard = await Card.findById(req.params.id);
+    if (!foundCard) return res.status(400).send('Card not found');
+    res.send(foundCard);
+  } catch(error) {
+    res.status(400).send(error);
+  }
+});
+
+router.put('/:id/edit', verify, async (req, res) => {
+  const {error} = idValidation(req.params);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  try {
+    const updateCard = await Card.updateOne({_id: req.params.id},{
+      $set: req.body,
+    });
+
+    if (updateCard.n == 0) return res.status(400).send('Card not found');
+
+    res.status(200).send('Card Updated');
+  } catch(error) {
+    res.status(400).send(error);
+  }
+});
+
+router.delete('/:id/delete', verify, async (req, res) => {
+  const {error} = idValidation(req.params);
+	if (error) return res.status(400).send(error.details[0].message);
+
+	try {
+		const deleteCard = await Card.deleteOne({ _id: req.params.id });
+		if (deleteCard.n == 0) return res.status(400).send('Card not found');
+		res.status(200).send("Card deleted");
+	} catch(error) {
+		res.status(400).send(error);
+	}
+})
+
 module.exports = router;

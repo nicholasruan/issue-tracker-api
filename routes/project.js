@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Project = require('../models/Project');
+const User = require('../models/User');
 const verify = require('./verifyToken');
 const { projectValidation, idValidation } = require('../validation');
 
@@ -9,11 +10,20 @@ router.post('/create', verify, async (req, res) => {
 
 	const proj = new Project({
 		title: req.body.title,
-		members: req.body.members
+		members: req.body.members,
+		user_id: req.body.user_id
 	});
 
 	try {
 		const savedProject = await proj.save();
+		const foundUser = await User.findById(req.body.user_id);
+		if (!foundUser) return res.status(400).send('User not found');
+    const project = await User.updateOne(
+      {_id: req.body.user_id},
+      {
+        $push: {project_ids: savedProject.id}
+      }
+    );
 		res.status(200).send({proj_id: savedProject.id});
 	} catch(error) {
 		res.status(400).send(error);

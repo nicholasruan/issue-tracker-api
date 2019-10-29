@@ -25,7 +25,6 @@ app.use('/api/users', authRoute);
 app.use('/api/projects', projRoute);
 app.use('/api/lists', listRoute);
 app.use('/api/cards', cardRoute);
-// app.use('/api/posts', postRoute);
 
 app.listen(port, () => {
 	console.log(`Server listening at port ${port}`);

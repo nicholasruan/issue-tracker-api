@@ -25,6 +25,7 @@ const loginValidation = (data) => {
 const projectValidation = (data) => {
 	const schema = Joi.object({
 		title: Joi.string().required(),
+		user_id: Joi.string().min(24).max(24).required()
 	});
 
 	return schema.validate(data);

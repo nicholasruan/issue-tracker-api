@@ -15,7 +15,7 @@ router.post('/create', verify, async (req, res) => {
 
   try {
     const savedList = await list.save();
-    const foundProject = await Project.findById(req.body.id);
+    const foundProject = await Project.findById(req.body.project_id);
 		if (!foundProject) return res.status(400).send('Project not found');
     const project = await Project.updateOne(
       {_id: req.body.project_id},
