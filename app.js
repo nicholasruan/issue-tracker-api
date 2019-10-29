@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const authRoute = require('./routes/auth');
-const postRoute = require('./routes/posts');
+const projRoute = require('./routes/project');
 const port = process.env.PORT || 5000;
 
 // Middleware
@@ -20,7 +20,8 @@ connection.once('open', () => {
 
 // Routes
 app.use('/api/users', authRoute);
-app.use('/api/posts', postRoute);
+app.use('/api/projects', projRoute);
+// app.use('/api/posts', postRoute);
 
 app.listen(port, () => {
 	console.log(`Server listening at port ${port}`);
