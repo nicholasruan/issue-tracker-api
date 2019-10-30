@@ -65,8 +65,16 @@ router.delete('/:id/delete', verify, async (req, res) => {
 	if (error) return res.status(400).send(error.details[0].message);
 
 	try {
+    const foundCard = await Card.findById(req.params.id);
+    if (!foundCard) return res.status(400).send('List not found');
+
+    const removeCardfromList = await List.updateOne(
+      {_id : foundCard.list_id},
+      { $pull: {card_ids : foundCard._id}}
+    )
+
 		const deleteCard = await Card.deleteOne({ _id: req.params.id });
-		if (deleteCard.n == 0) return res.status(400).send('Card not found');
+    
 		res.status(200).send("Card deleted");
 	} catch(error) {
 		res.status(400).send(error);

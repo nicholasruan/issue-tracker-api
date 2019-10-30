@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Project = require('../models/Project');
+const List = require('../models/List');
+const Card = require('../models/Card');
 const User = require('../models/User');
 const verify = require('./verifyToken');
 const { projectValidation, idValidation } = require('../validation');
@@ -67,8 +69,25 @@ router.delete('/:id/delete', verify, async (req, res) => {
 	if (error) return res.status(400).send(error.details[0].message);
 
 	try {
+		const foundProject = await Project.findById(req.params.id);
+		if (!foundProject) return res.status(400).send('Project not found');
+		const listList = foundProject.list_ids;
+		for (let i = 0; i < listList.length; i++) {
+			const listDocument = await List.findById(listList[i]);
+			for (let j = 0; j < listDocument.card_ids.length; j++) {
+				let deleteCard = await Card.deleteOne({_id: listDocument.card_ids[j]});
+			}
+			let deleteList = await List.deleteOne({_id: listDocument._id});
+		}
+
+		for (let i = 0; i < foundProject.members.length; i++) {
+			const removeProjectFromUser = await User.updateOne(
+	      {_id : foundProject.members[i]},
+	      { $pull: {project_ids : foundProject._id}}
+	    )
+		}
+
 		const deleteProject = await Project.deleteOne({ _id: req.params.id });
-		if (deleteProject.n == 0) return res.status(400).send('Project not found');
 		res.status(200).send("Project deleted");
 	} catch(error) {
 		res.status(400).send(error);

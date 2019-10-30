@@ -25,7 +25,8 @@ const loginValidation = (data) => {
 const projectValidation = (data) => {
 	const schema = Joi.object({
 		title: Joi.string().required(),
-		user_id: Joi.string().min(24).max(24).required()
+		user_id: Joi.string().min(24).max(24).required(),
+		members: Joi.array()
 	});
 
 	return schema.validate(data);
@@ -43,7 +44,7 @@ const idValidation = (data) => {
 const listValidation = (data) => {
 	const schema = Joi.object({
 		title: Joi.string().required(),
-		project_id: Joi.string().min(24).max(24).required()
+		project_id: Joi.string().min(24).max(24)
 	});
 
 	return schema.validate(data);

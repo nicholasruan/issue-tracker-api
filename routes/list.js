@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const List = require('../models/List');
+const Card = require('../models/Card');
 const Project = require('../models/Project');
 const verify = require('./verifyToken');
 const { listValidation, idValidation } = require('../validation');
@@ -64,8 +65,20 @@ router.delete('/:id/delete', verify, async (req, res) => {
 	if (error) return res.status(400).send(error.details[0].message);
 
 	try {
+    const foundList = await List.findById(req.params.id);
+    if (!foundList) return res.status(400).send('List not found');
+    const cardList = foundList.card_ids;
+    // remove all cards that are associated with this lsit
+    for (let i = 0; i < cardList.length; i++) {
+      let deleteCard = await Card.deleteOne({_id: cardList[i]});
+    }
+
+    // remove list from corresponding project collection
+    const removeListFromProject = await Project.updateOne(
+      {_id : foundList.project_id},
+      { $pull: {list_ids : foundList._id}}
+    )
 		const deleteList = await List.deleteOne({ _id: req.params.id });
-		if (deleteList.n == 0) return res.status(400).send('List not found');
 		res.status(200).send("List deleted");
 	} catch(error) {
 		res.status(400).send(error);
