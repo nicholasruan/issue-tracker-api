@@ -73,11 +73,10 @@ router.delete('/:id/delete', verify, async (req, res) => {
       { $pull: {card_ids : foundCard._id}}
     )
 
-		const deleteCard = await Card.deleteOne({ _id: req.params.id });
-    
-		res.status(200).send("Card deleted");
+	  const deleteCard = await Card.deleteOne({ _id: req.params.id });
+    res.status(200).send("Card deleted");
 	} catch(error) {
-		res.status(400).send(error);
+    res.status(400).send(error);
 	}
 })
 
