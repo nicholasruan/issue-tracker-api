@@ -2,7 +2,8 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { registerValidation, loginValidation } = require('../validation');
+const verify = require('./verifyToken');
+const { registerValidation, loginValidation, idValidation } = require('../validation');
 
 // Register User
 router.post('/register', async (req, res) => {
@@ -52,6 +53,20 @@ router.post('/login', async (req, res) => {
 	const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
 
 	res.header('auth-token', token).send({user_token: token, _id: user._id});
-})
+});
+
+router.get('/:id', verify, async (req, res) => {
+	const {error} = idValidation(req.params);
+
+	if (error) return res.status(400).send(error.details[0].message);
+
+	try {
+		const user = await User.findById( req.params.id);
+		if (!user) return res.status(400).send('Cannot find user');
+		res.send(user);
+	} catch(error) {
+		res.status(400).send(error);
+	}
+});
 
 module.exports = router;
