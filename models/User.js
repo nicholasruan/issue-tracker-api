@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	project_ids: [[String]]
+	project_ids: [mongoose.Schema.Types.ObjectId]
 });
 
 module.exports = mongoose.model('User', UserSchema);

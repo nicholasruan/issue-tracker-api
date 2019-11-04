@@ -2,6 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Project = require('../models/Project');
 const verify = require('./verifyToken');
 const { registerValidation, loginValidation, idValidation } = require('../validation');
 
@@ -63,7 +64,14 @@ router.get('/:id', verify, async (req, res) => {
 	try {
 		const user = await User.findById( req.params.id);
 		if (!user) return res.status(400).send('Cannot find user');
-		res.send(user);
+
+		let projList = [];
+		for (let i = 0; i < user.project_ids.length; i++) {
+			let foundProj = await Project.findById(user.project_ids[i]);
+			projList.push(foundProj);
+		}
+
+		res.send({ user: user, projects: projList});
 	} catch(error) {
 		res.status(400).send(error);
 	}

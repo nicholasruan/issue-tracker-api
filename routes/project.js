@@ -23,7 +23,7 @@ router.post('/create', verify, async (req, res) => {
     const project = await User.updateOne(
       {_id: req.body.user_id},
       {
-        $push: {project_ids: [savedProject.id, req.body.title]}
+        $push: {project_ids: savedProject.id}
       }
     );
 		res.status(200).send({proj_id: savedProject.id});
