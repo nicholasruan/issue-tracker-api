@@ -69,4 +69,6 @@ router.get('/:id', verify, async (req, res) => {
 	}
 });
 
+// add project for user
+
 module.exports = router;
