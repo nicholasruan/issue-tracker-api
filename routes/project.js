@@ -70,6 +70,38 @@ router.put('/:id/edit', verify, async (req,res) => {
 	}
 });
 
+// Add member to proj "/api/projects/:id/addUser"
+router.put('/:id/addUser', verify, async (req, res) => {
+	const {error} = idValidation(req.params);
+	if (error) return res.status(400).send(error.details[0].message);
+	if (!req.body.email) return res.status(400).send('User not found');
+	try {
+		const user = await User.findOne({ 'email' : req.body.email })
+		if (!user) return res.status(400).send('User not found');
+
+		if (user.project_ids.includes(req.params.id)) return res.status(400).send('User already inside project');
+
+		const projectAdd = await User.updateOne(
+      {_id: user._id},
+      {
+        $push: {project_ids: req.params.id}
+      }
+		);
+		
+		const userAdd = await Project.updateOne(
+			{_id: req.params.id},
+			{
+				$push: {members: user._id}
+			}
+		);
+
+		res.status(200).send('User added!');
+
+	} catch (error) {
+		res.status(400).send(error);
+	}
+}); 
+
 // - Delete "/api/projects/:id/delete"
 router.delete('/:id/delete', verify, async (req, res) => {
 	const {error} = idValidation(req.params);
