@@ -39,14 +39,19 @@ router.get('/:id', verify, async (req, res) => {
 	try {
 		const foundProject = await Project.findById(req.params.id);
 		if (!foundProject) return res.status(400).send('Project not found');
-		console.log(foundProject);
 		let memberList = [];
 		for (let i = 0; i < foundProject.members.length; i++) {
 			let foundUser = await User.findById(foundProject.members[i]);
 			memberList.push(foundUser);
 		}
+
+		let listList = [];
+		for (let i = 0; i < foundProject.list_ids.length; i++) {
+			let foundList = await List.findById(foundProject.list_ids[i]);
+			listList.push(foundList);
+		}
 		
-		res.send({ project: foundProject, members: memberList});
+		res.send({ project: foundProject, members: memberList, lists: listList});
 	} catch(error) {
 		res.status(400).send(error);
 	}
