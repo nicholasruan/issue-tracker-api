@@ -37,7 +37,12 @@ router.get('/:id', verify, async (req, res) => {
   try {
     const foundList = await List.findById(req.params.id);
     if (!foundList) return res.status(400).send('List not found');
-    res.send(foundList);
+    let cardList = [];
+    for (let i = 0; i < foundList.card_ids.length; i++) {
+      let foundCard = await Card.findById(foundList.card_ids[i]);
+      cardList.push(foundCard);
+    }
+    res.send({ list: foundList, cards: cardList });
   } catch(error) {
     res.status(400).send(error);
   }
