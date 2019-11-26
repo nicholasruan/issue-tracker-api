@@ -53,10 +53,9 @@ router.put('/:id/edit', verify, async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    const updateList = await List.updateOne({_id: req.params.id},{
-      $set: {
-        card_ids: req.body.card_ids
-      },
+    const updateList = await List.updateOne({_id: req.params.id},
+    {
+      $set: req.body,
     });
 
     if (updateList.n == 0) return res.status(400).send('List not found');
